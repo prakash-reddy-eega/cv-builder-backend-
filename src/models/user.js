@@ -8,5 +8,3 @@ const userSchema = new mongoose.Schema({
     profile_img: String
 },{versionKey: false})
 export const userModel = mongoose.model('user', userSchema, 'user')
-
-console.log('ll')
