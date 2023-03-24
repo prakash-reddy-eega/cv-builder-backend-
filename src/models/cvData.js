@@ -10,8 +10,30 @@ const cvDataSchema = new mongoose.Schema({
         type: String,
     },
     cvDetails: {
-        required: true,
-        type: Array,
+        basicDetails: {
+            required: true,
+            type: Array
+        },
+        education: {
+            required: true,
+            type: Array
+        },
+        employmentDetails: {
+            required: true,
+            type: Array
+        },
+        projects: {
+            required: true,
+            type: Array
+        },
+        skills: {
+            required: true,
+            type: Array
+        },
+        socialProfiles: {
+            required: false,
+            type: Array
+        }
     }
 },{versionKey: false})
 export const cvDataModel = mongoose.model('cvData', cvDataSchema, 'cv_data')

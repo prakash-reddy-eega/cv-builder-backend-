@@ -1,5 +1,5 @@
 import { UserModel } from "../../models/user.js";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { APIResponse } from "../../utils/common.js";
 import { DUMMY_PROFILE } from "../../utils/constant.js";
@@ -13,12 +13,8 @@ export const userRegistration = async (req, res) => {
     password,
     confirmPassword,
     username,
-    profileImg,
-    constactNumber,
+    contactNumber,
   } = req.body;
-  if (!profileImg) {
-    profileImg = DUMMY_PROFILE;
-  }
   const emailCheck = await UserModel.findOne({ email: email });
   const usernameCheck = await UserModel.findOne({ username: username });
   if (emailCheck || usernameCheck) {
@@ -28,7 +24,7 @@ export const userRegistration = async (req, res) => {
     } else if (emailCheck) {
       const response = new APIResponse(0, "Email already exists");
       res.status(200).send(response);
-    } else if (emailCheck) {
+    } else if (usernameCheck) {
       const response = new APIResponse(0, "username already exists");
       res.status(200).send(response);
     }
@@ -42,22 +38,24 @@ export const userRegistration = async (req, res) => {
           email: email,
           username: username,
           password: hashPassword,
-          constactNumber: constactNumber,
-          profileImg: profileImg,
+          contactNumber: contactNumber,
+          profileImg: DUMMY_PROFILE,
         });
         const savedUser = await doc.save();
         // Generate JWT Token
         const token = jwt.sign(
           { userID: savedUser._id },
-          process.env.JWT_SECRET_KEY,
+          process.env.JWT_SECRET_KEY, 
           { expiresIn: "5d" }
         );
+        const response = new APIResponse(1, "Registration Successfull", { "token": token})
+        res.status(201).send(response)
       } catch (err) {
         console.log(err);
-        const response = new APIResponse(0, "Exception Occurs:", {
+        const response = new APIResponse(0, "Exception Occurs: Try again later", {
           error: err.message,
         });
-        res.status(400).send(response);
+        res.status(404).send(response);
       }
     } else {
       const response = new APIResponse(
@@ -74,10 +72,10 @@ export const userLogin = async (req, res) => {
   try {
     const { username, email, password } = req.body;
     let user;
-    if (username) {
-      user = await UserModel.findOne({ username: username });
+    if (username.includes('@')) {
+      user = await UserModel.findOne({ email: username });
     } else {
-      user = await UserModel.findOne({ email: email });
+      user = await UserModel.findOne({ username: username });
     }
     if (user != null) {
       const isMatch = await bcrypt.compare(password, user.password);
@@ -102,9 +100,9 @@ export const userLogin = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    const response = new APIResponse(0, "Exception Occurs:", {
+    const response = new APIResponse(0, "Exception Occurs: try again later", {
       error: err.message,
     });
-    res.status(400).send(response);
+    res.status(404).send(response);
   }
 };

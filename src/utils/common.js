@@ -6,6 +6,3 @@ export class APIResponse {
       this.data = data;
     }
   }
-export const containsOnlyNumbers = (str) => {
-  return /^\d+$/.test(str);
-}
