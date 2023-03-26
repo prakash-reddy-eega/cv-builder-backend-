@@ -2,7 +2,6 @@ import { UserModel } from "../../models/user.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { APIResponse } from "../../utils/common.js";
-import { DUMMY_PROFILE } from "../../utils/constant.js";
 import { SALT } from "../../utils/constant.js";
 
 //user registration
@@ -39,7 +38,6 @@ export const userRegistration = async (req, res) => {
           username: username,
           password: hashPassword,
           contactNumber: contactNumber,
-          profileImg: DUMMY_PROFILE,
         });
         const savedUser = await doc.save();
         // Generate JWT Token
@@ -106,3 +104,56 @@ export const userLogin = async (req, res) => {
     res.status(404).send(response);
   }
 };
+//get profile details
+export const getProfileDetails = async (req, res ) =>{
+  try {
+      const { authorization } = req.headers;
+      const token = authorization.split(" ")[1];
+      const id = jwt.decode(token).userID;
+      const cvData = await UserModel.find({_id: id})
+      const response = new APIResponse(1, "Data Found", cvData)
+      res.status(200).send(response)
+
+  } catch (err) {
+      console.log(err);
+      const response = new APIResponse(0, "Exception Occurs: try again later", {
+      error: err.message,
+      });
+      res.status(404).send(response);
+  }
+}
+
+//upload profile pic
+export const uploadProfilePic = async (req, res) => {
+  try {
+      const data = req.body
+      const id = req.params.id
+      const doc = await UserModel.findByIdAndUpdate({_id: id},{profileImg: data.profileImg})
+      const response = new APIResponse(1, "Profile Pic Uploaded Successfully")
+      res.status(200).send(response)
+  } catch (err) {
+      console.log(err);
+      const response = new APIResponse(0, "Exception Occurs: try again later", {
+      error: err.message,
+      });
+      res.status(404).send(response);
+  }
+}
+
+//upload profile pic
+export const removeProfilePic = async (req, res) => {
+  try {
+      // const data = req.body
+      const id = req.params.id
+      const doc = await UserModel.findByIdAndUpdate({_id: id},{profileImg: null})
+      const response = new APIResponse(1, "Profile Pic removed Successfully")
+      res.status(200).send(response)
+  } catch (err) {
+      console.log(err);
+      const response = new APIResponse(0, "Exception Occurs: try again later", {
+      error: err.message,
+      });
+      res.status(404).send(response);
+  }
+}
+

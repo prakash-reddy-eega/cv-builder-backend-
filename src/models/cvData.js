@@ -1,39 +1,39 @@
 import mongoose from "mongoose";
 const cvDataSchema = new mongoose.Schema({
     userId: {
-        required: false,
+        required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
-    templete: {
+    template: {
         required: true,
         type: String,
     },
     cvDetails: {
         basicDetails: {
-            required: true,
+            required: false,
             type: Array
         },
         education: {
-            required: true,
+            required: false,
             type: Array
         },
         employmentDetails: {
-            required: true,
+            required: false,
             type: Array
         },
         projects: {
-            required: true,
+            required: false,
             type: Array
         },
         skills: {
-            required: true,
+            required: false,
             type: Array
         },
-        socialProfiles: {
+        socialprofiles: {
             required: false,
             type: Array
         }
     }
 },{versionKey: false})
-export const cvDataModel = mongoose.model('cvData', cvDataSchema, 'cv_data')
+export const CvDataModel = mongoose.model('cvData', cvDataSchema, 'cv_data')

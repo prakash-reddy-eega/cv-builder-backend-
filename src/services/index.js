@@ -1,2 +1,3 @@
 import authRoutes from './auth/routes.js'
-export  {authRoutes}
+import cvRoutes from './cv/routes.js'
+export  {authRoutes, cvRoutes}
