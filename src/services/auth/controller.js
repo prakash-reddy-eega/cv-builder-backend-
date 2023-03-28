@@ -113,7 +113,6 @@ export const getProfileDetails = async (req, res ) =>{
       const cvData = await UserModel.find({_id: id})
       const response = new APIResponse(1, "Data Found", cvData)
       res.status(200).send(response)
-
   } catch (err) {
       console.log(err);
       const response = new APIResponse(0, "Exception Occurs: try again later", {
@@ -140,7 +139,7 @@ export const uploadProfilePic = async (req, res) => {
   }
 }
 
-//upload profile pic
+//remve profile pic
 export const removeProfilePic = async (req, res) => {
   try {
       // const data = req.body

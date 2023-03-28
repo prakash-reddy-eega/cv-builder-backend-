@@ -14,8 +14,7 @@ export const jwtValidation = (req, res, next) => {
         jwt.verify(jwtToken, process.env.JWT_SECRET_KEY, async (error, payload) => {
           if (error) {
             const response = new APIResponse(0, 'Invalid JWT TOKEN')
-            res.status(401);
-            res.send(response);
+            res.status(401).send(response);
           } else {
             next();
           }

@@ -28,11 +28,9 @@ export const getCvs = async (req, res ) =>{
         const { authorization } = req.headers;
         const token = authorization.split(" ")[1];
         const id = jwt.decode(token).userID;
-        const r = await UserModel.find({_id: id})
         const cvData = await CvDataModel.find({userId: id})
         const response = new APIResponse(1, "Data Found", cvData)
         res.status(200).send(response)
-
     } catch (err) {
         console.log(err);
         const response = new APIResponse(0, "Exception Occurs: try again later", {

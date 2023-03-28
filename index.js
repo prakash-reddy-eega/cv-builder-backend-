@@ -8,7 +8,9 @@ import { authRoutes, cvRoutes } from './src/services/index.js';
 const port = process.env.PORT;
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000'
+  }));//adding port
 app.use(express.json())
 app.use('/api', authRoutes)
 app.use('/api/cv/', cvRoutes)
